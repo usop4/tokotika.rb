@@ -39,11 +39,31 @@ def digitalWrite(pin,value)
 	return cmd
 end
 
+def analogWrite(pin,value)
+  cmd = ':7880010000'
+	if pin == 1 then
+		cmd = cmd + ''+hex4(value)+'FFFFFFFFFFFF'
+	elsif pin == 2 then
+		cmd = cmd + 'FFFF'+hex4(value)+'FFFFFFFF'
+	elsif pin == 3 then
+		cmd = cmd + 'FFFFFFFF'+hex4(value)+'FFFF'
+	elsif pin == 4 then
+		cmd = cmd + 'FFFFFFFFFFFF'+hex4(value)+''
+  end
+	cmd = cmd + 'XX\r\n'
+	$s.puts cmd
+end
+
+def hex4(value)
+  return sprintf("%04x",value)
+end
+
 def wait(t)
   sleep 1
 end
 
 if __FILE__ == $0
+
   while true do
     digitalWrite(1,HIGH)
     wait(1)
